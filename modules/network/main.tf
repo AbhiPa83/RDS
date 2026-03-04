@@ -17,13 +17,13 @@ resource "aws_subnet" "public" {
 
 resource "aws_subnet" "db_1" {
   vpc_id            = aws_vpc.main.id
-  cidr_block        = "192.168.1.10/26"
+  cidr_block        = "192.168.1.64/26"
   availability_zone = "us-east-1b"
 }
 
 resource "aws_subnet" "db_2" {
   vpc_id            = aws_vpc.main.id
-  cidr_block        = "192.168.1.20/26"
+  cidr_block        = "192.168.1.128/26"
   availability_zone = "us-east-1c"
 }
 
