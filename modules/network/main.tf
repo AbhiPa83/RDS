@@ -11,20 +11,20 @@ resource "aws_internet_gateway" "igw" {
 resource "aws_subnet" "public" {
   vpc_id                  = aws_vpc.main.id
   cidr_block              = "192.168.1.0/26"
-  availability_zone       = "us-east-1a"
+  availability_zone       = "ap-south-1a"
   map_public_ip_on_launch = true
 }
 
 resource "aws_subnet" "db_1" {
   vpc_id            = aws_vpc.main.id
   cidr_block        = "192.168.1.64/26"
-  availability_zone = "us-east-1b"
+  availability_zone = "ap-south-1b"
 }
 
 resource "aws_subnet" "db_2" {
   vpc_id            = aws_vpc.main.id
   cidr_block        = "192.168.1.128/26"
-  availability_zone = "us-east-1c"
+  availability_zone = "ap-south-1c"
 }
 
 resource "aws_route_table" "public_rt" {
