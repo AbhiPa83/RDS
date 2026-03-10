@@ -23,6 +23,8 @@ resource "aws_db_instance" "mysql" {
   db_subnet_group_name = aws_db_subnet_group.main.name
   vpc_security_group_ids = [aws_security_group.rds_sg.id]
   skip_final_snapshot  = true
+  parameter_group_name = aws_db_parameter_group.mysql_logs.name
+  enabled_cloudwatch_logs_exports = ["error", "general", "slowquery"]
 }
 
 resource "aws_cloudwatch_metric_alarm" "rds_cpu_alarm" {
@@ -38,6 +40,32 @@ resource "aws_cloudwatch_metric_alarm" "rds_cpu_alarm" {
   dimensions = {
     DBINstanceIdentifier = aws_db_instance.mysql.id
   }
+}
+
+resource "aws_db_parameter_group" "mysql_logs" {
+  name = "mysal-logging-params"
+  family = "mysql8.0"
+
+  parameter {
+    name = "general_log"
+    value = "1"
+  }
+
+  parameter {
+    name = "slow-query-logs"
+    value = "1"
+  }
+
+  parameter {
+    name  = "long_query_time"
+    value = "2" # Log queries taking longer than 2 seconds
+  }
+
+  parameter {
+    name  = "log_output"
+    value = "FILE" # This allows AWS to pick up the files for CloudWatch
+  }
+
 }
 
 resource "aws_sns_topic" "alerts" {
