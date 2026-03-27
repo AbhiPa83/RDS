@@ -14,45 +14,45 @@ resource "aws_security_group" "rds_sg" {
 }
 
 resource "aws_db_instance" "mysql" {
-  allocated_storage    = 20
-  engine               = "mysql"
-  instance_class       = "db.t2.micro"
-  db_name              = "maindb"
-  username             = "admin"
-  password             = "TestingRDS123#" # Change this!
-  db_subnet_group_name = aws_db_subnet_group.main.name
-  vpc_security_group_ids = [aws_security_group.rds_sg.id]
-  skip_final_snapshot  = true
-  parameter_group_name = aws_db_parameter_group.mysql_logs.name
+  allocated_storage               = 20
+  engine                          = "mysql"
+  instance_class                  = "db.t3.micro"
+  db_name                         = "maindb"
+  username                        = "admin"
+  password                        = "TestingRDS123#" # Change this!
+  db_subnet_group_name            = aws_db_subnet_group.main.name
+  vpc_security_group_ids          = [aws_security_group.rds_sg.id]
+  skip_final_snapshot             = true
+  parameter_group_name            = aws_db_parameter_group.mysql_logs.name
   enabled_cloudwatch_logs_exports = ["error", "general", "slowquery"]
 }
 
 resource "aws_cloudwatch_metric_alarm" "rds_cpu_alarm" {
-  alarm_name = "rds-high-cpu-usage"
+  alarm_name          = "rds-high-cpu-usage"
   comparison_operator = "GreaterThanThreshold"
-  evaluation_periods = "2"
-  metric_name = "CPUUtilization"
-  namespace = "AWS/RDS"
-  period = "300"
-  statistic = "Average"
-  threshold = "60"
-  alarm_description = "The metric monitors RDS CPU utilization"
+  evaluation_periods  = "2"
+  metric_name         = "CPUUtilization"
+  namespace           = "AWS/RDS"
+  period              = "300"
+  statistic           = "Average"
+  threshold           = "60"
+  alarm_description   = "The metric monitors RDS CPU utilization"
   dimensions = {
     DBINstanceIdentifier = aws_db_instance.mysql.id
   }
 }
 
 resource "aws_db_parameter_group" "mysql_logs" {
-  name = "mysal-logging-params"
-  family = "mysql8.0"
+  name   = "mysal-logging-params"
+  family = "mysql8.4"
 
   parameter {
-    name = "general_log"
+    name  = "general_log"
     value = "1"
   }
 
   parameter {
-    name = "slow-query-logs"
+    name  = "slow_query_log"
     value = "1"
   }
 
@@ -75,5 +75,5 @@ resource "aws_sns_topic" "alerts" {
 resource "aws_sns_topic_subscription" "email_sub" {
   topic_arn = aws_sns_topic.alerts.arn
   protocol  = "email"
-  endpoint  = "your-email@example.com" # Put your real email here
+  endpoint  = "abhipa83@outlook.com" # Put your real email here
 }

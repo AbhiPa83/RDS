@@ -1,5 +1,5 @@
 provider "aws" {
-  region = "us-east-1"
+  region = "ap-south-1"
 }
 
 module "network" {
@@ -23,8 +23,8 @@ module "database" {
 resource "aws_iam_role" "eb_scheduler_role" {
   name = "eb_scheduler_role"
   assume_role_policy = jsonencode({
-    version = 2012-10-17
-    statement = [{
+    Version = "2012-10-17"
+    Statement = [{
       Effect    = "Allow"
       Principal = { Service = "scheduler.amazonaws.com" }
       Action    = "sts:AssumeRole"
@@ -54,7 +54,7 @@ resource "aws_scheduler_schedule" "stop_ec2" {
   name       = "stop-ec2-evening"
   group_name = "default"
   flexible_time_window {
-    mode = "off"
+    mode = "OFF"
   }
   schedule_expression          = "cron(0 19 * * ? *)"
   schedule_expression_timezone = "Asia/Kolkata"
@@ -71,7 +71,7 @@ resource "aws_scheduler_schedule" "stop_rds" {
   name       = "stop-rds-evening"
   group_name = "default"
   flexible_time_window {
-    mode = "off"
+    mode = "OFF"
   }
   schedule_expression          = "cron(0 19 * * ? *)"
   schedule_expression_timezone = "Asia/Kolkata"
@@ -79,7 +79,7 @@ resource "aws_scheduler_schedule" "stop_rds" {
     arn      = "arn:aws:scheduler:::aws-sdk:rds:stopDBInstance"
     role_arn = aws_iam_role.eb_scheduler_role.arn
     input = jsonencode({
-      DBInstanceIdentifier = module.database.db_id
+      DBInstanceIdentifier = module.database.db_instance_id
     })
   }
 }
@@ -88,7 +88,7 @@ resource "aws_scheduler_schedule" "start_ec2" {
   name       = "start-ec2-morning"
   group_name = "default"
   flexible_time_window {
-    mode = "off"
+    mode = "OFF"
   }
   schedule_expression          = "cron(0 7 * * ? *)"
   schedule_expression_timezone = "Asia/Kolkata"
@@ -105,7 +105,7 @@ resource "aws_scheduler_schedule" "start_rds" {
   name       = "start-rds-morning"
   group_name = "default"
   flexible_time_window {
-    mode = "off"
+    mode = "OFF"
   }
   schedule_expression          = "cron(0 7 * * ? *)"
   schedule_expression_timezone = "Asia/Kolkata"
@@ -113,7 +113,7 @@ resource "aws_scheduler_schedule" "start_rds" {
     arn      = "arn:aws:scheduler:::aws-sdk:rds:startDBInstance"
     role_arn = aws_iam_role.eb_scheduler_role.arn
     input = jsonencode({
-      DBInstanceIdentifier = module.database.db_id
+      DBInstanceIdentifier = module.database.db_instance_id
     })
   }
 }
