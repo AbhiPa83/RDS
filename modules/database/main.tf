@@ -16,7 +16,7 @@ resource "aws_security_group" "rds_sg" {
 resource "aws_db_instance" "mysql" {
   allocated_storage               = 20
   engine                          = "mysql"
-  instance_class                  = "db.t3.micro"
+  instance_class                  = "db.t2.micro"
   db_name                         = "maindb"
   username                        = "admin"
   password                        = "TestingRDS123#" # Change this!
